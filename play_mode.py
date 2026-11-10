@@ -17,8 +17,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
             game_framework.push_mode(pause_mode)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_i:
-            game_framework.push_mode(item_mode)
+        elif item_mode.handle_event(boy, event):
+            pass
         else:
             boy.handle_event(event)
 
@@ -39,6 +39,7 @@ def update():
 def render():
     clear_canvas()
     game_world.render()
+    item_mode.draw(boy)
     update_canvas()
 
 def finish():
