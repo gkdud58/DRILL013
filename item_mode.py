@@ -1,47 +1,23 @@
-import game_framework
 from pico2d import *
-import game_world
 
-image = None
+# 0: 공없음, 1: 작은공, 2: 큰공
+KEY_TO_ITEM = {SDLK_0: 0, SDLK_1: 1, SDLK_2: 2}
+ITEM_NAMES = {0: '공 없음', 1: '작은공', 2: '큰공'}
+
+font = None
 
 
-def init():
-    global image
-    image = load_image('item_select.png')
+def handle_event(boy, event):
+    # 게임을 멈추지 않고 키를 누르는 즉시 들고 있는 공을 바꿈
+    if event.type == SDL_KEYDOWN and event.key in KEY_TO_ITEM:
+        boy.ball_type = KEY_TO_ITEM[event.key]
+        return True
+    return False
 
-def finish():
-    global image
-    image = None
-
-def handle_events():
-    import play_mode  # 순환 import 방지
-
-    for event in get_events():
-        if event.type == SDL_QUIT:
-            game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_0:
-            play_mode.boy.ball_type = 0  # 공 없음
-            game_framework.pop_mode()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_1:
-            play_mode.boy.ball_type = 1  # 작은공
-            game_framework.pop_mode()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_2:
-            play_mode.boy.ball_type = 2  # 큰공
-            game_framework.pop_mode()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_i:
-            game_framework.pop_mode()
-
-def update():
-    pass
-
-def render():
-    clear_canvas()
-    game_world.render()  # 아래에 깔린 플레이 화면
-    image.draw(get_canvas_width() // 2, get_canvas_height() // 2)
-    update_canvas()
-
-def pause(): pass
-
-def resume(): pass
+def draw(boy):
+    global font
+    if font is None:
+        font = load_font('C:/Windows/Fonts/malgun.ttf', 20)
+    font.draw(10, get_canvas_height() - 20,
+              f'[0]없음 [1]작은공 [2]큰공  현재: {ITEM_NAMES[boy.ball_type]}',
+              (0, 0, 0))
