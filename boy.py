@@ -113,6 +113,13 @@ class Boy:
             self.x = max(25, min(get_canvas_width() - 25, self.x))
 
     def draw(self):
+        self.draw_body()
+        if self.ball_type != 0 and self.state != 'SLEEP':
+            # 들고 있는 공: 바라보는 방향 손 쪽에 표시
+            Ball.get_image(self.ball_type).draw(
+                self.x + self.face_dir * 30, self.y - 5)
+
+    def draw_body(self):
         if self.state == 'SLEEP':
             angle = pi / 2 if self.face_dir == 1 else -pi / 2
             flip = '' if self.face_dir == 1 else 'h'
